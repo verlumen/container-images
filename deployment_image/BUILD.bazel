@@ -1,106 +1,71 @@
 load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 load("@bazel_skylib//rules:selects.bzl", "select")
 load("@container_structure_test//:defs.bzl", "container_structure_test")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
-# Define build flags
-string_flag(
-    name = "arch",
-    doc = "Architecture type",
-    default = "x86_64",
-    values = ["x86_64", "x86"],
+# Constants for the versions
+_TERRAFORM_VERSION = "1.5.6"
+_GCLOUD_VERSION = "444.0.0"
+_BAZELISK_VERSION = "1.18.0"
+_JQ_VERSION = "1.6"
+
+# Define http rules for downloading the binaries
+http_archive(
+    name = "terraform_archive",
+    urls = ["https://releases.hashicorp.com/terraform/" + _TERRAFORM_VERSION + "/terraform_" + _TERRAFORM_VERSION + "_linux_386.zip"],
+    build_file_content = "exports_files(['terraform'])",
 )
 
-string_flag(
-    name = "terraform_version",
-    doc = "Version of Terraform",
-    default = "1.5.6",
-)
-
-string_flag(
-    name = "gcloud_version",
-    doc = "Version of Google Cloud SDK",
-    default = "444.0.0",
-)
-
-# Define http_file rules for downloading binaries
-http_file(
-    name = "terraform_zip",
-    urls = [
-        "https://releases.hashicorp.com/terraform/{version}/terraform_{version}_linux_{arch}.zip".format(
-            version = select({
-                "//conditions:default": "$(terraform_version)"
-            }),
-            arch = select({
-                "//conditions:default": "$(arch)"
-            })
-        )
-    ],
-    # Ensure you update SHA256 value
-    sha256 = "YOUR_SHA256_FOR_TERRAFORM",
-)
-
-http_file(
-    name = "google_cloud_sdk_tar",
-    urls = [
-        "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{gcloud_version}-linux-{arch}.tar.gz".format(
-            gcloud_version = select({
-                "//conditions:default": "$(gcloud_version)"
-            }),
-            arch = select({
-                "//conditions:default": "$(arch)"
-            })
-        )
-    ],
-    # Ensure you update SHA256 value
-    sha256 = "YOUR_SHA256_FOR_GCLOUD",
+http_archive(
+    name = "gcloud_archive",
+    urls = ["https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-" + _GCLOUD_VERSION + "-linux-x86_64.tar.gz"],
+    strip_prefix = "google-cloud-sdk",
+    build_file_content = "exports_files(['bin/gcloud'])",
 )
 
 http_file(
     name = "jq_binary",
-    urls = ["https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"],
+    urls = ["https://github.com/stedolan/jq/releases/download/jq-" + _JQ_VERSION + "/jq-linux64"],
     executable = True,
-    # Ensure you update SHA256 value
-    sha256 = "YOUR_SHA256_FOR_JQ",
 )
 
 http_file(
     name = "bazelisk_binary",
-    urls = ["https://github.com/bazelbuild/bazelisk/releases/download/v1.10.1/bazelisk-linux-{arch}".format(
-        arch = select({
-            "//conditions:default": "$(arch)"
-        })
-    )],
+    urls = ["https://github.com/bazelbuild/bazelisk/releases/download/v" + _BAZELISK_VERSION + "/bazelisk-linux-amd64"],
     executable = True,
-    # Ensure you update SHA256 value
-    sha256 = "YOUR_SHA256_FOR_BAZELISK",
 )
 
-# Define genrule for unpacking the gcloud tarball
-genrule(
-    name = "unpack_google_cloud_sdk",
-    srcs = [":google_cloud_sdk_tar"],
-    outs = ["google_cloud_sdk"],
-    cmd = "mkdir -p $@ && tar -xzf $< -C $@",
-)
-
-# Package everything together in a tarball
+# Combine all the binaries into a tar
 pkg_tar(
-    name = "tools_pkg",
+    name = "binaries_tar",
     srcs = [
-        ":terraform_zip",
-        ":unpack_google_cloud_sdk",
+        "@terraform_archive//:terraform",
+        "@gcloud_archive//:bin/gcloud",
         ":jq_binary",
         ":bazelisk_binary",
     ],
-    mode = "0755",  # executable permissions
-    package_dir = "tools",
-    strip_prefix = "./",
+    mode = "0755",
+    strip_prefix = ".",
+    package_dir = "bin",
+)
+
+# Define the OCI image rule
+oci_image(
+    name = "deployment_image",
+    base = "@debian//image",
+    tars = [":binaries_tar"],
+)
+
+# Define the OCI tarball rule
+oci_tarball(
+    name = "deployment_image_tarball",
+    image = ":deployment_image",
 )
 
 container_structure_test(
     name = "test",
     configs = ["test.yaml"],
     driver = "tar",
-    image = "tarball.tar",
+    image = ":deployment_image_tarball",
 )
