@@ -100,7 +100,7 @@ pkg_tar(
 
 container_structure_test(
     name = "test",
-    configs = ["deployment_image_test.yaml"],
+    configs = ["test.yaml"],
     driver = "tar",
     image = "tarball.tar",
 )
