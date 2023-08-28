@@ -2,7 +2,9 @@ load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
 load("@bazel_skylib//rules:selects.bzl", "select")
 load("@container_structure_test//:defs.bzl", "container_structure_test")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+load("@rules_pkg//:http_file.bzl", "http_file")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
+
 
 # Constants for the versions
 _TERRAFORM_VERSION = "1.5.6"
