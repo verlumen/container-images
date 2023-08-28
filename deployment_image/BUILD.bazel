@@ -1,0 +1,106 @@
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+load("@bazel_skylib//rules:selects.bzl", "select")
+load("@container_structure_test//:defs.bzl", "container_structure_test")
+
+# Define build flags
+string_flag(
+    name = "arch",
+    doc = "Architecture type",
+    default = "x86_64",
+    values = ["x86_64", "x86"],
+)
+
+string_flag(
+    name = "terraform_version",
+    doc = "Version of Terraform",
+    default = "1.5.6",
+)
+
+string_flag(
+    name = "gcloud_version",
+    doc = "Version of Google Cloud SDK",
+    default = "444.0.0",
+)
+
+# Define http_file rules for downloading binaries
+http_file(
+    name = "terraform_zip",
+    urls = [
+        "https://releases.hashicorp.com/terraform/{version}/terraform_{version}_linux_{arch}.zip".format(
+            version = select({
+                "//conditions:default": "$(terraform_version)"
+            }),
+            arch = select({
+                "//conditions:default": "$(arch)"
+            })
+        )
+    ],
+    # Ensure you update SHA256 value
+    sha256 = "YOUR_SHA256_FOR_TERRAFORM",
+)
+
+http_file(
+    name = "google_cloud_sdk_tar",
+    urls = [
+        "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{gcloud_version}-linux-{arch}.tar.gz".format(
+            gcloud_version = select({
+                "//conditions:default": "$(gcloud_version)"
+            }),
+            arch = select({
+                "//conditions:default": "$(arch)"
+            })
+        )
+    ],
+    # Ensure you update SHA256 value
+    sha256 = "YOUR_SHA256_FOR_GCLOUD",
+)
+
+http_file(
+    name = "jq_binary",
+    urls = ["https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"],
+    executable = True,
+    # Ensure you update SHA256 value
+    sha256 = "YOUR_SHA256_FOR_JQ",
+)
+
+http_file(
+    name = "bazelisk_binary",
+    urls = ["https://github.com/bazelbuild/bazelisk/releases/download/v1.10.1/bazelisk-linux-{arch}".format(
+        arch = select({
+            "//conditions:default": "$(arch)"
+        })
+    )],
+    executable = True,
+    # Ensure you update SHA256 value
+    sha256 = "YOUR_SHA256_FOR_BAZELISK",
+)
+
+# Define genrule for unpacking the gcloud tarball
+genrule(
+    name = "unpack_google_cloud_sdk",
+    srcs = [":google_cloud_sdk_tar"],
+    outs = ["google_cloud_sdk"],
+    cmd = "mkdir -p $@ && tar -xzf $< -C $@",
+)
+
+# Package everything together in a tarball
+pkg_tar(
+    name = "tools_pkg",
+    srcs = [
+        ":terraform_zip",
+        ":unpack_google_cloud_sdk",
+        ":jq_binary",
+        ":bazelisk_binary",
+    ],
+    mode = "0755",  # executable permissions
+    package_dir = "tools",
+    strip_prefix = "./",
+)
+
+container_structure_test(
+    name = "test",
+    configs = ["deployment_image_test.yaml"],
+    driver = "tar",
+    image = "tarball.tar",
+)
