@@ -1,0 +1,21 @@
+schemaVersion: "2.0.0"
+commandTests:
+- name: "terraform in PATH"
+  command: "which"
+  args: ["terraform"]
+  expectedOutput: ["/usr/local/bin/terraform\n"]
+
+- name: "gcloud in PATH"
+  command: "which"
+  args: ["gcloud"]
+  expectedOutput: ["/usr/local/bin/gcloud\n"]
+
+- name: "jq in PATH"
+  command: "which"
+  args: ["jq"]
+  expectedOutput: ["/usr/local/bin/jq\n"]
+
+- name: "bazelisk in PATH"
+  command: "which"
+  args: ["bazelisk"]
+  expectedOutput: ["/usr/local/bin/bazelisk\n"]
