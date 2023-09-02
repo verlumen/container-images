@@ -19,7 +19,7 @@ oci_image(
     base = "@debian",
     tars = [
         ":binaries_tar",
-        ":extract_ca_certificates",
+        ":extract_and_tar_ca_certificates",
     ],
 )
 
@@ -36,11 +36,12 @@ container_structure_test(
 )
 
 genrule(
-    name = "extract_ca_certificates",
+    name = "extract_and_tar_ca_certificates",
     srcs = ["@ca-certificates-deb//file"],
-    outs = ["ca-certificates-out"],
+    outs = ["ca-certificates-out.tar"],  # Name changed to produce a .tar file
     cmd = """
-        mkdir -p $@
-        dpkg -x $(location @ca-certificates-deb//file) $@
+        mkdir -p temp_output
+        dpkg -x $(location @ca-certificates-deb//file) temp_output
+        tar -cf $@ -C temp_output .
     """,
 )
