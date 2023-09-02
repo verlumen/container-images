@@ -8,10 +8,8 @@ oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 # Declare external images you need to pull, for example: 
 oci.pull(
     name = "debian",
-    # 'trixie-20230814-slim' is not reproducible, but it's convenient.
-    # During the build we print a WARNING message that includes recommended 'digest' and 'platforms'
-    # values which you can use here in place of 'tag' to pin for reproducibility.
-    tag = "trixie-20230814-slim",
+    # tag = "trixie-20230814-slim",
+    digest = "sha256:1864d511a32ed6be4e41e86a139cdbe64e69d4dce523a606ca428f3b2d4e78a1",
     image = "debian",
     platforms = ["linux/amd64"],
 )
