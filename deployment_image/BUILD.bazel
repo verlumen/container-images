@@ -41,15 +41,9 @@ oci_image(
     tars = [":binaries_tar"],
 )
 
-# Define the OCI tarball rule
-oci_tarball(
-    name = "deployment_image_tarball",
-    image = ":deployment_image",
-)
-
 container_structure_test(
     name = "test",
     configs = ["test.yaml"],
     driver = "tar",
-    image = ":deployment_image_tarball",
+    image = ":deployment_image",
 )
