@@ -21,6 +21,6 @@ http_archive(
 
 http_archive(
     name = "bazelisk_binary",
-    urls = ["https://github.com/bazelbuild/bazelisk/releases/download/v{version}/bazelisk-linux-amd64".format(version=_BAZELISK_VERSION)],
+    urls = ["https://github.com/bazelbuild/bazelisk/archive/refs/tags/v{version}.tar.gz".format(version=_BAZELISK_VERSION)],
     build_file_content = _BUILD_FILE_CONTENT,
 )
