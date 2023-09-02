@@ -41,15 +41,8 @@ oci_image(
     tars = [":binaries_tar"],
 )
 
-oci_tarball(
-    name = "deployment_image_tarball",
-    image = ":deployment_image",
-    repo_tags = ["test:test"],
-)
-
 container_structure_test(
     name = "deployment_image_test",
     configs = ["test.yaml"],
-    driver = "tar",
-    image = ":deployment_image_tarball",
+    image = ":deployment_image",
 )
