@@ -20,6 +20,7 @@ jobs:
       - name: Run tests
         run: |
           bazel test //... \
+            --test_output=errors \
             --sandbox_debug
 
 
