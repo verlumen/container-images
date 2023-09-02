@@ -17,8 +17,11 @@ pkg_tar(
 oci_image(
     name = "deployment_image",
     base = "@debian",
+    entrypoint = ["/entrypoint.sh"],
+    env = {"PATH": "/usr/bin:/usr/local/bin"},
     tars = [
         ":binaries_tar",
+        ":entrypoint_tar",
         ":extract_and_tar_ca_certificates",
     ],
 )
@@ -35,13 +38,20 @@ container_structure_test(
     image = ":deployment_image",
 )
 
+pkg_tar(
+    name = "entrypoint_tar",
+    srcs = ["entrypoint.sh"],
+    mode = "0755",  # Give it execute permissions
+    package_dir = "/",  # Place it at the root of the image
+)
+
 genrule(
     name = "extract_and_tar_ca_certificates",
     srcs = ["@ca-certificates-deb//file"],
-    outs = ["ca-certificates-out.tar"],  # Name changed to produce a .tar file
+    outs = ["ca-certificates-out.tar"],
     cmd = """
         mkdir -p temp_output
         dpkg -x $(location @ca-certificates-deb//file) temp_output
-        tar -cf $@ -C temp_output .
+        tar -cf $@ -C temp_output/usr/share/ca-certificates .
     """,
 )
