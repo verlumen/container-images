@@ -10,7 +10,7 @@ pkg_tar(
         "@terraform_binary//:file": "terraform",
     },
     mode = "0755",
-    package_dir = "bin",
+    package_dir = "usr/bin",
 )
 
 # Define the OCI image rule
