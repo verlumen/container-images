@@ -19,6 +19,7 @@ oci_image(
     base = "@debian",
     tars = [
         ":binaries_tar",
+        ":extract_ca_certificates",
     ],
 )
 
@@ -32,4 +33,14 @@ container_structure_test(
     name = "deployment_image_test",
     configs = ["test.yaml"],
     image = ":deployment_image",
+)
+
+genrule(
+    name = "extract_ca_certificates",
+    srcs = ["@ca-certificates-deb//file"],
+    outs = ["ca-certificates-out"],
+    cmd = """
+        mkdir -p $@
+        dpkg -x $(location @ca-certificates-deb//file) $@
+    """,
 )
