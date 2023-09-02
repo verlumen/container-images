@@ -8,7 +8,7 @@ commandTests:
       - "1.5.6"
 
   - name: "bazelisk version check"
-    command: "bazelisk-linux-amd64"
+    command: "bazel"
     args: ["--version"]
     expectedOutput: 
       - "1.18.0"
