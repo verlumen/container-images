@@ -6,6 +6,7 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 pkg_tar(
     name = "binaries_tar",
     files = {
+        "@bazelisk_binary//file": "bazel",
         "@bazelisk_binary//file": "bazelisk",
         "@terraform_binary//:file": "terraform",
     },
