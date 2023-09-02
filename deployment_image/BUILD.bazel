@@ -7,7 +7,6 @@ pkg_tar(
     name = "binaries_tar",
     files = {
         "@bazelisk_binary//file": "bazel",
-        "@bazelisk_binary//file": "bazelisk",
         "@terraform_binary//:file": "terraform",
     },
     mode = "0755",
@@ -21,6 +20,12 @@ oci_image(
     tars = [
         ":binaries_tar",
     ],
+)
+
+oci_tarball(
+    name = "deployment_image_tarball",
+    image = ":deployment_image",
+    repo_tags = ["deployment_image:test"],
 )
 
 container_structure_test(
