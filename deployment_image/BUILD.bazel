@@ -20,7 +20,6 @@ oci_image(
     base = "@debian",
     tars = [
         ":binaries_tar",
-        ":which_tar",
     ],
 )
 
@@ -28,18 +27,4 @@ container_structure_test(
     name = "deployment_image_test",
     configs = ["test.yaml"],
     image = ":deployment_image",
-)
-
-genrule(
-    name = "which_install",
-    cmd = "apt-get update && apt-get install -y which && touch $@",
-    outs = ["which"],
-)
-
-pkg_tar(
-    name = "which_tar",
-    srcs = [":which"],
-    mode = "0755",
-    strip_prefix = ".",
-    package_dir = "install",
 )
