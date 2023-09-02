@@ -17,7 +17,7 @@ http_file(
 
 http_file(
     name = "ca-certificates-deb",
-    sha256 = "ce52caa51ef9e509fb6b7e5ad892e5cf10feb0794b0aed4d2f36adb00a1a2779",
+    sha256 = "5308b9bd88eebe2a48be3168cb3d87677aaec5da9c63ad0cf561a29b8219115c",
     url = "http://ftp.de.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_{version}_all.deb".format(version = _CA_CERTIFICATIONS_VERSION),
 )
 
