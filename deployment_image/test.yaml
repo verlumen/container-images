@@ -7,7 +7,7 @@ commandTests:
     expectedOutput: 
       - "1.5.6"
 
-  - name: "bazelisk version check"
+  - name: "bazel version check"
     command: "bazel"
     args: ["--version"]
     expectedOutput: 
