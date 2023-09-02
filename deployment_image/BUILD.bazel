@@ -5,12 +5,11 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 # Combine all the binaries into a tar
 pkg_tar(
     name = "binaries_tar",
-    srcs = [
-        "@terraform_binary//:file",
-        "@bazelisk_binary//:file",
-    ],
+    files = {
+        "@bazelisk_binary//file": "bin/bazelisk",
+        "@terraform_binary//:file": "bin/terraform",
+    },
     mode = "0755",
-    strip_prefix = ".",
     package_dir = "bin",
 )
 
