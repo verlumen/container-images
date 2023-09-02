@@ -42,7 +42,7 @@ oci_image(
 )
 
 container_structure_test(
-    name = "test",
+    name = "deployment_image_test",
     configs = ["test.yaml"],
     driver = "tar",
     image = ":deployment_image",
