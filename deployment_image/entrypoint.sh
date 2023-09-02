@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Update apt-get
 apt-get update -y
@@ -7,4 +7,4 @@ apt-get update -y
 apt-get install -y ca-certificates
 
 # Set attention to bash
-exec /bin/bash
+exec bash
