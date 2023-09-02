@@ -2,32 +2,12 @@ load("@container_structure_test//:defs.bzl", "container_structure_test")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
-# Constants for the versions
-_TERRAFORM_VERSION = "1.5.6"
-_BAZELISK_VERSION = "1.18.0"
-
-# Use genrule to fetch terraform binary
-genrule(
-    name = "fetch_terraform",
-    outs = ["terraform"],
-    cmd = "curl -L -o $@ https://releases.hashicorp.com/terraform/" + _TERRAFORM_VERSION + "/terraform_" + _TERRAFORM_VERSION + "_linux_386.zip && unzip $@",
-    executable = True,
-)
-
-# Use genrule to fetch bazelisk binary
-genrule(
-    name = "fetch_bazelisk",
-    outs = ["bazelisk-linux-amd64"],
-    cmd = "curl -L -o $@ https://github.com/bazelbuild/bazelisk/releases/download/v" + _BAZELISK_VERSION + "/bazelisk-linux-amd64",
-    executable = True,
-)
-
 # Combine all the binaries into a tar
 pkg_tar(
     name = "binaries_tar",
     srcs = [
-        ":terraform",
-        ":bazelisk-linux-amd64",
+        "@terraform_binary//:file",
+        "@bazelisk_binary//:file",
     ],
     mode = "0755",
     strip_prefix = ".",
