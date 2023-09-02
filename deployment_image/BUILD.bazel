@@ -37,7 +37,7 @@ pkg_tar(
 # Define the OCI image rule
 oci_image(
     name = "deployment_image",
-    base = "@debian//image",
+    base = "@debian",
     tars = [":binaries_tar"],
 )
 
