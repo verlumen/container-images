@@ -22,7 +22,6 @@ oci_image(
     tars = [
         ":binaries_tar",
         ":entrypoint_tar",
-        ":extract_and_tar_ca_certificates",
     ],
 )
 
@@ -43,15 +42,4 @@ pkg_tar(
     srcs = ["entrypoint.sh"],
     mode = "0755",  # Give it execute permissions
     package_dir = "/",  # Place it at the root of the image
-)
-
-genrule(
-    name = "extract_and_tar_ca_certificates",
-    srcs = ["@ca-certificates-deb//file"],
-    outs = ["ca-certificates-out.tar"],
-    cmd = """
-        mkdir -p temp_output
-        dpkg -x $(location @ca-certificates-deb//file) temp_output
-        tar -cf $@ -C temp_output/usr/share/ca-certificates .
-    """,
 )
