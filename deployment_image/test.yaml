@@ -8,6 +8,12 @@ commandTests:
     expectedOutput: 
       - "Bazelisk version: v1.18.0"
 
+  - name: "gcloud version check"
+    command: "gcloud"
+    args: ["--version"]
+    expectedOutput: 
+      - "Google Cloud SDK 444"
+
   - name: "jq version check"
     command: "jq"
     args: ["--version"]
