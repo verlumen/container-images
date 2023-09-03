@@ -16,7 +16,7 @@ pkg_tar(
 
 # Define the OCI image rule
 oci_image(
-    name = "deployment_image",
+    name = "image",
     base = "@debian",
     tars = [
         ":binaries_tar",
@@ -24,15 +24,15 @@ oci_image(
 )
 
 container_structure_test(
-    name = "deployment_image_test",
+    name = "image_test",
     configs = ["test.yaml"],
-    image = ":deployment_image",
+    image = ":image",
 )
 
 oci_push(
-    name = "push_gcp_deployment_image",
-    image = ":deployment_image",
-    repository = "$(image_registry)/$(gcp_deployment_image_name)",
+    name = "push_image",
+    image = ":image",
+    repository = "$(image_registry)/$(image_name)",
     remote_tags = [
         "$(image_tag)",
         "latest",
