@@ -1,4 +1,4 @@
 common --enable_bzlmod
-build --define gcp_deployment_image_name=gcp-builder
-build --define image_registry=ghcr.io/verlumen/container-images
+build --define gcp_deployment_image_name=verlumen/container-images
+build --define image_registry=ghcr.io
 build --define image_tag=latest
