@@ -12,7 +12,7 @@ commandTests:
     command: "gcloud"
     args: ["--version"]
     expectedOutput: 
-      - "Google Cloud SDK 444"
+      - "Google Cloud SDK 444.0.0"
 
   - name: "jq version check"
     command: "jq"
