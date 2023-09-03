@@ -15,12 +15,6 @@ http_file(
     url = "https://github.com/bazelbuild/bazelisk/releases/download/v{version}/bazelisk-linux-amd64".format(version = _BAZELISK_VERSION),
 )
 
-http_file(
-    name = "ca-certificates-deb",
-    sha256 = "5308b9bd88eebe2a48be3168cb3d87677aaec5da9c63ad0cf561a29b8219115c",
-    url = "http://ftp.de.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_{version}_all.deb".format(version = _CA_CERTIFICATIONS_VERSION),
-)
-
 http_archive(
     name = "terraform_binary",
     build_file_content = """
