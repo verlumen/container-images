@@ -1,3 +1,3 @@
 common --enable_bzlmod
-build --define image_registry=gcr.io/tradestar-345000
+build --define image_registry=ghcr.io/verlumen/container-images
 build --define image_tag=latest
