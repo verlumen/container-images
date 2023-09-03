@@ -32,9 +32,6 @@ container_structure_test(
 oci_push(
     name = "push_image",
     image = ":image",
-    repository = "$(image_registry)/$(image_name)",
-    remote_tags = [
-        "$(image_tag)",
-        "latest",
-    ]
+    repository = "ghcr.io/verlumen/gcp-builder",
+    remote_tags = ["latest"]
 )
