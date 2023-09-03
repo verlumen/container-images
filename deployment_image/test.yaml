@@ -1,15 +1,21 @@
 schemaVersion: "2.0.0"
 
 commandTests:
-  - name: "terraform version check"
-    command: "terraform"
-    args: ["version"]
-    expectedOutput: 
-      - "1.5.6"
-
   - name: "bazel version check"
     setup: [["/entrypoint.sh"]]
     command: "bazel"
     args: ["version"]
     expectedOutput: 
       - "Bazelisk version: v1.18.0"
+
+  - name: "jq version check"
+    command: "jq"
+    args: ["--version"]
+    expectedOutput: 
+      - "jq-1.6"
+
+  - name: "terraform version check"
+    command: "terraform"
+    args: ["version"]
+    expectedOutput: 
+      - "1.5.6"
