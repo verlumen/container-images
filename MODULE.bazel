@@ -1,18 +1,19 @@
-bazel_dep(name = "rules_oci", version = "1.3.1")
-bazel_dep(name = "container_structure_test", version = "1.16.0")
+bazel_dep(name = "container_structure_test", version = "1.15.0")
+bazel_dep(name = "rules_oci", version = "1.3.2")
+bazel_dep(name = "rules_pkg", version = "0.9.1")
+bazel_dep(name = "platforms", version = "0.0.6")
+
+_GCLOUD_VERSION = "444.0.0"
 
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 
 # Declare external images you need to pull, for example: 
 oci.pull(
-    name = "debian_slim",
-    # 'bookworm-slim' is not reproducible, but it's convenient.
-    # During the build we print a WARNING message that includes recommended 'digest' and 'platforms'
-    # values which you can use here in place of 'tag' to pin for reproducibility.
-    tag = "bookworm-slim",
-    image = "docker.io/debian",
-    platforms = ["linux/amd64"],
+    name = "debian",
+    tag = _GCLOUD_VERSION,
+    # digest = "sha256:1864d511a32ed6be4e41e86a139cdbe64e69d4dce523a606ca428f3b2d4e78a1",
+    image = "docker.io/google/cloud-sdk",
 )
 
 # For each oci.pull call, repeat the "name" here to expose them as dependencies.
-use_repo(oci, "debian_slim")
+use_repo(oci, "debian")

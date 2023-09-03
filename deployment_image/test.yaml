@@ -1,21 +1,26 @@
 schemaVersion: "2.0.0"
+
 commandTests:
-- name: "terraform in PATH"
-  command: "which"
-  args: ["terraform"]
-  expectedOutput: ["/usr/local/bin/terraform\n"]
+  - name: "bazel version check"
+    command: "bazel"
+    args: ["version"]
+    expectedOutput: 
+      - "Bazelisk version: v1.18.0"
 
-- name: "gcloud in PATH"
-  command: "which"
-  args: ["gcloud"]
-  expectedOutput: ["/usr/local/bin/gcloud\n"]
+  - name: "gcloud version check"
+    command: "gcloud"
+    args: ["--version"]
+    expectedOutput: 
+      - "Google Cloud SDK 444.0.0"
 
-- name: "jq in PATH"
-  command: "which"
-  args: ["jq"]
-  expectedOutput: ["/usr/local/bin/jq\n"]
+  - name: "jq version check"
+    command: "jq"
+    args: ["--version"]
+    expectedOutput: 
+      - "jq-1.6"
 
-- name: "bazelisk in PATH"
-  command: "which"
-  args: ["bazelisk"]
-  expectedOutput: ["/usr/local/bin/bazelisk\n"]
+  - name: "terraform version check"
+    command: "terraform"
+    args: ["version"]
+    expectedOutput: 
+      - "1.5.6"

@@ -1,71 +1,36 @@
-load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
-load("@bazel_skylib//rules:selects.bzl", "select")
 load("@container_structure_test//:defs.bzl", "container_structure_test")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
-# Constants for the versions
-_TERRAFORM_VERSION = "1.5.6"
-_GCLOUD_VERSION = "444.0.0"
-_BAZELISK_VERSION = "1.18.0"
-_JQ_VERSION = "1.6"
-
-# Define http rules for downloading the binaries
-http_archive(
-    name = "terraform_archive",
-    urls = ["https://releases.hashicorp.com/terraform/" + _TERRAFORM_VERSION + "/terraform_" + _TERRAFORM_VERSION + "_linux_386.zip"],
-    build_file_content = "exports_files(['terraform'])",
-)
-
-http_archive(
-    name = "gcloud_archive",
-    urls = ["https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-" + _GCLOUD_VERSION + "-linux-x86_64.tar.gz"],
-    strip_prefix = "google-cloud-sdk",
-    build_file_content = "exports_files(['bin/gcloud'])",
-)
-
-http_file(
-    name = "jq_binary",
-    urls = ["https://github.com/stedolan/jq/releases/download/jq-" + _JQ_VERSION + "/jq-linux64"],
-    executable = True,
-)
-
-http_file(
-    name = "bazelisk_binary",
-    urls = ["https://github.com/bazelbuild/bazelisk/releases/download/v" + _BAZELISK_VERSION + "/bazelisk-linux-amd64"],
-    executable = True,
-)
-
 # Combine all the binaries into a tar
 pkg_tar(
     name = "binaries_tar",
-    srcs = [
-        "@terraform_archive//:terraform",
-        "@gcloud_archive//:bin/gcloud",
-        ":jq_binary",
-        ":bazelisk_binary",
-    ],
+    files = {
+        "@bazelisk_binary//file": "bazel",
+        "@jq_binary//file": "jq",
+        "@terraform_binary//:file": "terraform",
+    },
     mode = "0755",
-    strip_prefix = ".",
-    package_dir = "bin",
+    package_dir = "usr/bin",
 )
 
 # Define the OCI image rule
 oci_image(
     name = "deployment_image",
-    base = "@debian//image",
-    tars = [":binaries_tar"],
+    base = "@debian",
+    tars = [
+        ":binaries_tar",
+    ],
 )
 
-# Define the OCI tarball rule
 oci_tarball(
     name = "deployment_image_tarball",
     image = ":deployment_image",
+    repo_tags = ["deployment_image:test"],
 )
 
 container_structure_test(
-    name = "test",
+    name = "deployment_image_test",
     configs = ["test.yaml"],
-    driver = "tar",
-    image = ":deployment_image_tarball",
+    image = ":deployment_image",
 )
