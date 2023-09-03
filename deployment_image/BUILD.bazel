@@ -23,12 +23,6 @@ oci_image(
     ],
 )
 
-oci_tarball(
-    name = "deployment_image_tarball",
-    image = ":deployment_image",
-    repo_tags = ["deployment_image:test"],
-)
-
 container_structure_test(
     name = "deployment_image_test",
     configs = ["test.yaml"],
