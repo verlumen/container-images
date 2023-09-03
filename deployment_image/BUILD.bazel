@@ -35,10 +35,3 @@ container_structure_test(
     configs = ["test.yaml"],
     image = ":deployment_image",
 )
-
-pkg_tar(
-    name = "entrypoint_tar",
-    srcs = ["entrypoint.sh"],
-    mode = "0755",  # Give it execute permissions
-    package_dir = "/",  # Place it at the root of the image
-)
