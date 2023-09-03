@@ -18,7 +18,7 @@ http_file(
 http_file(
     name = "jq_binary",
     executable = True,
-    sha256 = "af986793a515d500ab2d35f8d2ae420f865d6d2f153fc3114faf68be45b3e2d4", # Replace with the correct sha256 sum
+    sha256 = "af986793a515d500ab2d35f8d2ae420f865d6d2f153fc3114faf68be45b3e2d4",
     url = "https://github.com/jqlang/jq/releases/download/jq-{version}/jq-linux64".format(version = _JQ_VERSION),
 )
 
