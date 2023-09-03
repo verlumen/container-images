@@ -22,7 +22,7 @@ http_archive(
     urls = ["https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{version}-linux-x86_64.tar.gz".format(version = _GCLOUD_VERSION)],
     build_file_content = """
 filegroup(
-    name = "gcloud",
+    name = "file",
     srcs = ["bin/gcloud"],
     visibility = ["//visibility:public"],
 )
