@@ -31,4 +31,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push gcp-deployer
-        run: bazel run //deployment_image:push_gcp_deployment_image --define image_tag=${{ env.IMAGE_TAG }} --define image_registry=${{ env.REGISTRY }}
+        run: |
+          bazel run //:push_image \
+            --define image_name=${{ env.IMAGE_NAME }} \
+            --define image_registry=${{ env.REGISTRY }} \
+            --define image_tag=${{ env.IMAGE_TAG }}
