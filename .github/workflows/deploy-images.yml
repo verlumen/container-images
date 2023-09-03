@@ -31,4 +31,4 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push gcp-deployer
-        run: bazel run //deployment_image:push_gcp_deployer
+        run: bazel run //deployment_image:push_gcp_deployment_image
