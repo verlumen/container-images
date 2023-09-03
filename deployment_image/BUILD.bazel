@@ -20,7 +20,6 @@ oci_image(
     base = "@debian",
     tars = [
         ":binaries_tar",
-        ":entrypoint_tar",
     ],
 )
 
