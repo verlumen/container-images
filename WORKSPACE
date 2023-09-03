@@ -32,7 +32,7 @@ filegroup(
 http_file(
     name = "jq_binary",
     executable = True,
-    sha256 = "af986793a515d500ab2d35f8d2ae420f865d6d2f153fc3114faf68be45b3e2d4",
+    sha256 = "af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44",
     url = "https://github.com/jqlang/jq/releases/download/jq-{version}/jq-linux64".format(version = _JQ_VERSION),
 )
 
