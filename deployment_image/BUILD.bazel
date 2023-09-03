@@ -18,8 +18,6 @@ pkg_tar(
 oci_image(
     name = "deployment_image",
     base = "@debian",
-    entrypoint = ["/entrypoint.sh"],
-    env = {"PATH": "/usr/bin:/usr/local/bin"},
     tars = [
         ":binaries_tar",
         ":entrypoint_tar",
