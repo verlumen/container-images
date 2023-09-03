@@ -34,3 +34,10 @@ container_structure_test(
     configs = ["test.yaml"],
     image = ":deployment_image",
 )
+
+oci_push(
+    name = "push_deployment_image",
+    image = ":deployment_image",
+    repository = "$(image_registry)/$(deployment_image_name)",
+    remote_tags = ["$(image_tag)"]
+)
