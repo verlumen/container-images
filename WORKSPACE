@@ -38,8 +38,8 @@ http_file(
 
 http_archive(
     name = "terraform_binary",
-    build_file_content = """
     urls = ["https://releases.hashicorp.com/terraform/{version}/terraform_{version}_linux_386.zip".format(version = _TERRAFORM_VERSION)],
+    build_file_content = """
 filegroup(
     name = "file",
     srcs = ["terraform"],
