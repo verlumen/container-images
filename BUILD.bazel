@@ -1,5 +1,5 @@
 load("@container_structure_test//:defs.bzl", "container_structure_test")
-load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_push", "oci_tarball")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 # Combine all the binaries into a tar
@@ -27,4 +27,14 @@ container_structure_test(
     name = "deployment_image_test",
     configs = ["test.yaml"],
     image = ":deployment_image",
+)
+
+oci_push(
+    name = "push_gcp_deployment_image",
+    image = ":deployment_image",
+    repository = "$(image_registry)/$(gcp_deployment_image_name)",
+    remote_tags = [
+        "$(image_tag)",
+        "latest",
+    ]
 )
