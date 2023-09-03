@@ -33,5 +33,8 @@ oci_push(
     name = "push_gcp_deployment_image",
     image = ":deployment_image",
     repository = "$(image_registry)/$(gcp_deployment_image_name)",
-    remote_tags = ["$(image_tag)"]
+    remote_tags = [
+        "$(image_tag)",
+        "latest",
+    ]
 )
