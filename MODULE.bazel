@@ -3,12 +3,14 @@ bazel_dep(name = "rules_oci", version = "1.3.2")
 bazel_dep(name = "rules_pkg", version = "0.9.1")
 bazel_dep(name = "platforms", version = "0.0.6")
 
+_GCLOUD_VERSION = "444.0.0"
+
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 
 # Declare external images you need to pull, for example: 
 oci.pull(
     name = "debian",
-    tag = "444.0.0",
+    tag = _GCLOUD_VERSION,
     # digest = "sha256:1864d511a32ed6be4e41e86a139cdbe64e69d4dce523a606ca428f3b2d4e78a1",
     image = "docker.io/google/cloud-sdk",
 )
