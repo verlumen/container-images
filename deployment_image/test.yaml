@@ -10,6 +10,6 @@ commandTests:
   - name: "bazel version check"
     setup: [["/entrypoint.sh"]]
     command: "bazel"
-    args: ["--version"]
+    args: ["version"]
     expectedOutput: 
-      - "1.18.0"
+      - "Bazelisk version: v1.18.0"
